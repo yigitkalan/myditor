@@ -5,9 +5,12 @@ import (
 	"os"
 )
 
-func main(){
-    fd := int(os.Stdin.Fd())
-    original := terminal.EnableRaw(fd)
-    terminal.LoopInput()
-    defer terminal.DisableRaw(fd, original)
+func main() {
+	fd := int(os.Stdin.Fd())
+	original := terminal.EnableRaw(fd)
+	defer terminal.DisableRaw(fd, original)
+    terminal.EditorRefreshScreen()
+    for {
+        terminal.EditorProcessKey()
+    }
 }
