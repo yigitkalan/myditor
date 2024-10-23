@@ -41,12 +41,6 @@ func GetTermios(fd int) *unix.Termios {
 	return term
 }
 
-func EditorRefreshScreen() {
-	clearScreen := "\033[2J"
-	toHome := "\033[H"
-	os.Stdout.Write([]byte(clearScreen + toHome))
-}
-
 func Kill(message string) {
 	EditorRefreshScreen()
 	fmt.Errorf(message)

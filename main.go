@@ -9,8 +9,8 @@ func main() {
 	fd := int(os.Stdin.Fd())
 	original := terminal.EnableRaw(fd)
 	defer terminal.DisableRaw(fd, original)
-    terminal.EditorRefreshScreen()
-    for {
-        terminal.EditorProcessKey()
-    }
+	terminal.EditorRefreshScreen()
+	for {
+		terminal.EditorProcessKey()
+	}
 }
