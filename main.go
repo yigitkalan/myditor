@@ -1,16 +1,17 @@
 package main
 
 import (
+	"myditor/editor"
 	"myditor/terminal"
-	"os"
 )
 
 func main() {
-	fd := int(os.Stdin.Fd())
-	original := terminal.EnableRaw(fd)
-	defer terminal.DisableRaw(fd, original)
+	fd := int(terminal.GetFd())
+	terminal.EnableRaw(fd)
 	terminal.EditorRefreshScreen()
 	for {
-		terminal.EditorProcessKey()
+		if editor.EditorProcessKey() == -1 {
+			break
+		}
 	}
 }

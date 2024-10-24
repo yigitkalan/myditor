@@ -2,15 +2,17 @@ package terminal
 
 import (
 	"fmt"
+	"myditor/core"
 	"os"
-
 	"golang.org/x/sys/unix"
 )
 
-func EnableRaw(fd int) *unix.Termios {
+
+func EnableRaw(fd int) {
 	termios := GetTermios(fd)
 
-	oldState := termios
+    core.Config.OriginalState = *termios
+
 	// Look manpage of termios(3) for more information about these flags
 	termios.Lflag &^= unix.ECHO | unix.ICANON | unix.ISIG | unix.IEXTEN
 	termios.Iflag &^= unix.IXON | unix.ICRNL | unix.BRKINT | unix.INPCK | unix.ISTRIP
@@ -21,28 +23,33 @@ func EnableRaw(fd int) *unix.Termios {
 
 	err := unix.IoctlSetTermios(fd, unix.TCSETS, termios)
 	if err != nil {
-		Kill("Enabling Raw mode")
+		kill("Enabling Raw mode")
 	}
-	return oldState
 }
 
-func DisableRaw(fd int, original *unix.Termios) {
-	err := unix.IoctlSetTermios(fd, unix.TCSETS, original)
+func DisableRaw(fd int) {
+	err := unix.IoctlSetTermios(fd, unix.TCSETS, &core.Config.OriginalState)
 	if err != nil {
-		Kill("Disabling Raw mode")
+		kill("Disabling Raw mode")
 	}
 }
 
 func GetTermios(fd int) *unix.Termios {
 	term, err := unix.IoctlGetTermios(fd, unix.TCGETS)
 	if err != nil {
-		Kill("Getting terminal information")
+		kill("Getting terminal information")
 	}
 	return term
 }
 
-func Kill(message string) {
+func GetFd() int {
+    return int(os.Stdin.Fd())
+}
+
+func kill(message string) {
 	EditorRefreshScreen()
+    DisableRaw(GetFd())
 	fmt.Errorf(message)
 	os.Exit(1)
 }
+

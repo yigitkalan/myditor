@@ -5,21 +5,9 @@ import (
 	"os"
 )
 
-func EditorProcessKey() {
-	b := editorReadKey()
-
-	switch b {
-	case CTRL_KEY('q'):
-        EditorRefreshScreen()
-		os.Exit(0)
-        break
-    default:
-        os.Stdout.Write([]byte{b})
-	}
-}
 
 // Read input byte by byte
-func editorReadKey() byte {
+func EditorReadKey() byte {
 	buf := make([]byte, 1)
 	var n int = 0
 	var err error
@@ -29,7 +17,7 @@ func editorReadKey() byte {
 	}
 
 	if err != nil && err != io.EOF {
-        Kill("Reading keys")
+        kill("Reading keys")
 	}
 	return buf[0]
 }
