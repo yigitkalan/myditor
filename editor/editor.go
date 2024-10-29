@@ -6,25 +6,27 @@ import (
 	"os"
 )
 
-
-func EditorProcessKey() int  {
+func EditorProcessKey() int {
 	b := terminal.EditorReadKey()
 
 	switch b {
 	case terminal.CTRL_KEY('q'):
-        exit()
-        return -1
-    default:
-        os.Stdout.Write([]byte{b})
+		exit()
+		return -1
+	default:
+		os.Stdout.Write([]byte{b})
 	}
-    return 0
+	return 0
 }
 
-func Init(){
-    terminal.SetWindowSize(terminal.GetFd(), &core.Config)
+func Init() {
+	fd := terminal.GetFd()
+	terminal.EnableRaw(fd)
+	terminal.SetWindowSize(terminal.GetFd(), &core.Config)
+	terminal.EditorRefreshScreen()
 }
 
-func exit(){
-    terminal.EditorRefreshScreen()
-    terminal.DisableRaw(terminal.GetFd())
+func exit() {
+	terminal.EditorRefreshScreen()
+	terminal.DisableRaw(terminal.GetFd())
 }
