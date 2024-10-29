@@ -11,8 +11,7 @@ func EditorRefreshScreen() {
 	toHome := "\033[H"
 	os.Stdout.Write([]byte(clearScreen + toHome))
     EditorDrawRows()
-    os.Stdout.Write([]byte("\033[H"))
-    os.Stdout.Write([]byte("\033[H"))
+    os.Stdout.Write([]byte(toHome))
 }
 
 func EditorDrawRows() {
