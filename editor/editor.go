@@ -1,6 +1,7 @@
 package editor
 
 import (
+	"myditor/core"
 	"myditor/terminal"
 	"os"
 )
@@ -17,6 +18,10 @@ func EditorProcessKey() int  {
         os.Stdout.Write([]byte{b})
 	}
     return 0
+}
+
+func Init(){
+    terminal.SetWindowSize(terminal.GetFd(), &core.Config)
 }
 
 func exit(){

@@ -2,16 +2,15 @@ package terminal
 
 import (
 	"fmt"
+	"golang.org/x/sys/unix"
 	"myditor/core"
 	"os"
-	"golang.org/x/sys/unix"
 )
-
 
 func EnableRaw(fd int) {
 	termios := GetTermios(fd)
 
-    core.Config.OriginalState = *termios
+	core.Config.OriginalState = *termios
 
 	// Look manpage of termios(3) for more information about these flags
 	termios.Lflag &^= unix.ECHO | unix.ICANON | unix.ISIG | unix.IEXTEN
@@ -43,13 +42,21 @@ func GetTermios(fd int) *unix.Termios {
 }
 
 func GetFd() int {
-    return int(os.Stdin.Fd())
+	return int(os.Stdin.Fd())
+}
+
+func SetWindowSize(fd int, config *core.EditorConfig) {
+	ws, err := unix.IoctlGetWinsize(fd, unix.TIOCGWINSZ)
+	if err != nil || ws.Col == 0 {
+		kill("Getting window size")
+	}
+    config.ScreenCols = ws.Col
+    config.ScreenRows = ws.Row
 }
 
 func kill(message string) {
 	EditorRefreshScreen()
-    DisableRaw(GetFd())
+	DisableRaw(GetFd())
 	fmt.Errorf(message)
 	os.Exit(1)
 }
-

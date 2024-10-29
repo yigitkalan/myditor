@@ -1,6 +1,9 @@
 package terminal
 
-import "os"
+import (
+	"myditor/core"
+	"os"
+)
 
 
 func EditorRefreshScreen() {
@@ -9,10 +12,11 @@ func EditorRefreshScreen() {
 	os.Stdout.Write([]byte(clearScreen + toHome))
     EditorDrawRows()
     os.Stdout.Write([]byte("\033[H"))
+    os.Stdout.Write([]byte("\033[H"))
 }
 
 func EditorDrawRows() {
-	for i := 0; i < 24; i++ {
+    for i := 0; i < int(core.Config.ScreenRows); i++ {
 		os.Stdout.Write([]byte("~\r\n"))
 	}
 }
