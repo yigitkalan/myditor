@@ -22,7 +22,7 @@ func EditorProcessKey() int {
 func Init() {
 	fd := terminal.GetFd()
 	terminal.EnableRaw(fd)
-	terminal.SetWindowSize(terminal.GetFd(), &core.Config)
+	terminal.GetWindowSize(terminal.GetFd(), &core.Config)
 	terminal.EditorRefreshScreen()
 }
 
